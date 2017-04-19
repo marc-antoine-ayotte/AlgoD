@@ -1,7 +1,4 @@
-import std.stdio;
 import std.conv;
-
-
 
 
 class LinkedList(T) {
@@ -44,6 +41,22 @@ public:
         ++_size;
     }
 
+    T pop_front() 
+    in {
+        assert(!this.empty);
+    }
+    body {
+        T element = this._first._value;
+        if(this.size == 1) {
+            this._first = null;
+            this._last = null;
+        } else {
+            this._first = this._first._next;
+        }
+        --_size;
+        return element;
+    }
+
     void clear() {
         this._size = 0;
         this._first = null;
@@ -54,25 +67,35 @@ public:
         return this._size;
     }
 
-    string opCast() {
-        string output = "List : [ " ;
-        Node!T* current = this._first;
-        for (int i = 0; i < _size; ++i) {
-            output ~= text(current._value) ~ ", ";
-            current = current._next;
-        }
-        return output[0 .. ($-2)] ~ " ]";
+    bool empty() const @property{
+        return this._size == 0;
     }
 
-    T opIndex(int index) {
+    string opCast() {
+        string output = "List : { " ;
+        Node!T* current = this._first;
+        for (int i = 0; i < _size; ++i) {
+            output ~= text(current._value) ~ "-> ";
+            current = current._next;
+        }
+        return output[0 .. ($-3)] ~ " }";
+    }
+
+    T opIndex(int index) 
+    in {
         assert(index < size);
-        Node!T * current =this._first;
+    }
+    body {
+        Node!T*  current = this._first;
         for(int i =0; i < index-1; ++i) current = current._next;
         return current._value; 
     }
 
-    T opIndexAssign(T element, int index){
+    T opIndexAssign(T element, int index)
+    in {
         assert(index < size);
+    }
+    body {
         Node!T * current = this._first;
         for(int i =0; i < index-1; ++i) current = current._next;
         current._value = element;
@@ -81,17 +104,3 @@ public:
     
 }
 
-
-void main() {
-    auto list = new LinkedList!int();
-    for(int i = 0; i < 10; ++i) list.push(i);
-    writeln(cast(string)list);
-    writeln(list.size);
-    list.clear();
-    for(int i = 0; i < 10; ++i) list.append(i);
-    writeln(cast(string)list);
-    writeln(list[4]);
-    list[4] = 100;
-    writeln(cast(string)list);
-    //writeln(list[11]);  would crash.
-}
