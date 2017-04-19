@@ -4,8 +4,7 @@ import std.conv;
 
 
 
-struct LinkedList(T) 
-{
+class LinkedList(T) {
 private:
     Node!T* _first;
     Node!T* _last;
@@ -15,8 +14,10 @@ private:
         Node!T* _next;
     }
 public:
-    LinkedList!T  create() {
-        return LinkedList!T(null,null,0);
+    this() {
+        _first = null;
+        _last = null;
+        _size = size;
     }
 
     void push( T element) {
@@ -82,7 +83,7 @@ public:
 
 
 void main() {
-    auto list = LinkedList!int(null,null,0);
+    auto list = new LinkedList!int();
     for(int i = 0; i < 10; ++i) list.push(i);
     writeln(cast(string)list);
     writeln(list.size);
