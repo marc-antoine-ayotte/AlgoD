@@ -2,17 +2,19 @@ import std.stdio;
 import std.conv;
 
 
-struct Node(T) {
-        T _value;
-        Node!T* _next;
-}
+
 
 struct LinkedList(T) 
 {
+private:
     Node!T* _first;
     Node!T* _last;
     int _size;
-
+    struct Node(T) {
+        T _value;
+        Node!T* _next;
+    }
+public:
     LinkedList!T  create() {
         return LinkedList!T(null,null,0);
     }
@@ -51,14 +53,14 @@ struct LinkedList(T)
         return this._size;
     }
 
-    void print() {
+    string opCast() {
         string output = "List : [ " ;
         Node!T* current = this._first;
         for (int i = 0; i < _size; ++i) {
             output ~= text(current._value) ~ ", ";
             current = current._next;
         }
-        writeln(output[0 .. ($-2)] ~ " ]");
+        return output[0 .. ($-2)] ~ " ]";
     }
 
     T opIndex(int index) {
@@ -82,13 +84,13 @@ struct LinkedList(T)
 void main() {
     auto list = LinkedList!int(null,null,0);
     for(int i = 0; i < 10; ++i) list.push(i);
-    list.print();
+    writeln(cast(string)list);
     writeln(list.size);
     list.clear();
     for(int i = 0; i < 10; ++i) list.append(i);
-    list.print();
+    writeln(cast(string)list);
     writeln(list[4]);
     list[4] = 100;
-    list.print();
+    writeln(cast(string)list);
     //writeln(list[11]);  would crash.
 }
